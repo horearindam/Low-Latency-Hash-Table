@@ -4,6 +4,26 @@
 
 static const uint32_t INITIAL_CAPACITY = 53;
 
+#define HT_PRIME_1 151
+#define HT_PRIME_2 163
+
+static int Hash(const char *s, int a, int m) {
+    long hash = 0;
+
+    for (int i = 0; s[i] != '\0'; i++) {
+        hash = (hash * a + s[i]) % m;
+    }
+
+    return (int)hash;
+}
+
+static int GetHash(const char *s, int num_buckets, int attempt) {
+    int hash_a = Hash(s, HT_PRIME_1, num_buckets);
+    int hash_b = Hash(s, HT_PRIME_2, num_buckets);
+
+    return (hash_a + attempt * (hash_b + 1)) % num_buckets;
+}
+
 static HashNode *CreateNode(const char *key, const char *value) {
     if (key == NULL || value == NULL) {
         return NULL;
@@ -27,6 +47,16 @@ static HashNode *CreateNode(const char *key, const char *value) {
     return node;
 }
 
+static void DeleteNode(HashNode *node) {
+    if (node == NULL) {
+        return;
+    }
+
+    free(node->key);
+    free(node->value);
+    free(node);
+}
+
 HashTable *CreateHashTable(void) {
     HashTable *table = malloc(sizeof(HashTable));
     if (table == NULL) {
@@ -43,15 +73,6 @@ HashTable *CreateHashTable(void) {
     }
 
     return table;
-}
-
-static void DeleteNode(HashNode *node) {
-    if (node == NULL) {
-        return;
-    }
-    free(node->key);
-    free(node->value);
-    free(node);
 }
 
 void DeleteHashTable(HashTable *table) {
