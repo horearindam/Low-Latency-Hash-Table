@@ -1,4 +1,4 @@
-# Framework of the KeyMatrix
+# KeyMatrix: A Cache Friendly Open Addressing HashTable
 
 A small, fast, and predictable C library implementing a hash table with **open addressing**. No pointer forests, no abstraction fog—just direct, transparent data layout and collision handling you can actually reason about.
 
